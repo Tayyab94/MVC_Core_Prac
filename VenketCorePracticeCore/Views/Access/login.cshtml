@@ -1,0 +1,61 @@
+﻿
+@model loginViewModel
+
+@{
+    ViewBag.Title = "login";
+
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="login" asp-controller="Access" method="post">
+                <div asp-validation-summary="All" class="text-danger">
+
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password"></label>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password"></span>
+                </div>
+                <div class="form-group">
+                   <div class="form-check">
+                       <label asp-for="Rememberme">
+                           <input asp-for="Rememberme" />
+                           @Html.DisplayNameFor(x=>x.Rememberme)
+                       </label>
+                   </div>
+                </div>
+                <input type="submit" class="btn btn-primary" value="login" />
+            </form>
+        </div>
+        <hr />
+        <div class="col-md-6">
+            <h2>External Logins</h2>
+            @{ 
+                if(Model.ExternalLogins.Count==0)
+                {
+                    <3>No External Login is cOnfigured..</3>
+                }
+                else
+                {
+                    <form method="post" asp-action="ExternalLogins" asp-route-returnUrl="@Model.ReturnURL">
+                       @foreach (var provider in Model.ExternalLogins)
+                       {
+                        <button type="submit" class="btn btn-primary" name="provider" 
+                                value="@provider.Name" title="Login with your @provider.DisplayName Account">
+                        @provider.DisplayName
+                        </button>
+                       }
+                    </form>
+                }
+            }
+        </div>
+    </div>
+</div>
+

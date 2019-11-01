@@ -1,0 +1,98 @@
+﻿
+@model EditEmployeeViewModel
+
+
+@{
+    ViewBag.Title = "Create Employee";
+
+    string pathImage = "~/Images/" + (Model.ExistingPhoto ?? "https://static.euronews.com/articles/stories/03/22/31/26/880x495_cmsv2_19a68302-c560-548f-a4c9-fdd67499665c-3223126.jpg");
+
+}
+
+<form enctype="multipart/form-data" asp-action="Edit" asp-controller="Home" method="post" class="mt-3">
+
+
+    <input asp-for="ID" hidden />
+    <input hidden asp-for="ExistingPhoto" />
+    <div class="form-group row">
+        <label for="Name" class="col-sm-2 col-form-label">Name</label>
+        <div class="col-sm-10">
+            <input asp-for="Name" class="form-control" placeholder="Name" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="Emial" class="col-sm-2 col-form-label">Email</label>
+        <div class="col-sm-10">
+            <input asp-for="Emial" class="form-control" placeholder="Name" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="Name" class="col-sm-2 col-form-label">Department</label>
+        <div class="col-sm-10">
+            <select asp-for="Departments" class="custom-select mr-sm-3" asp-items="@Html.GetEnumSelectList<Department>()"></select>
+        </div>
+    </div>
+
+
+
+    <div class="form-group row">
+        <label for="imagePath" class="col-sm-2 col-form-label">Photo</label>
+        <div class="col-sm-10">
+            <div class="custom-file">
+                <input asp-for="imagePath" class="form-control custom-file-input fileUploadertag" multiple />
+                <label class="custom-file-label fileUploaderlabel">Chose File....</label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+
+        <div class="col-sm-4 offset-4">
+           <img src="@pathImage" class="img-fluid" asp-append-version="true"/>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-10">
+            <input type="submit" class="btn btn-primary" value="Update" />
+            <a asp-action="ShowAllEmployee" asp-controller="Home">Cancel</a>
+        </div>
+    </div>
+</form>
+
+@section scripts{
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+
+            //This code if shwo how the single file name into label
+            //$(".fileUploadertag").on("change", function () {
+
+            //    var fileName = $(this).val().split("\\").pop();
+
+            //    $(this).next(".fileUploaderlabel").html(fileName);
+            //});
+
+
+            //Shows the multiple files in to filelabel
+            $(".fileUploadertag").on("change", function () {
+
+                var fileLabel = $(this).next(".fileUploaderlabel");
+                var files = $(this)[0].files;
+
+                if (files.length > 1) {
+
+                    fileLabel.html(files.length+" Files are Selected");
+                } else if (files.length == 1) {
+                    fileLabel.html(files[0].name);
+                }
+                //var fileName = $(this).val().split("\\").pop();
+
+                //$(this).next(".fileUploaderlabel").html(fileName);
+            });
+        });
+    </script>
+}

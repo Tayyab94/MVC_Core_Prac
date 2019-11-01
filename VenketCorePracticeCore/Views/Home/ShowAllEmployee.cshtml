@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Employee>
+
+@{
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "List";
+}
+<h3>Detail</h3>
+
+
+<div class="card-deck">
+    @foreach (var item in Model)
+    {
+        string pathImage = "~/Images/" + (item.imagePath ?? "https://static.euronews.com/articles/stories/03/22/31/26/880x495_cmsv2_19a68302-c560-548f-a4c9-fdd67499665c-3223126.jpg");
+
+
+    <div class="card m-3">
+        <div class="card-header">
+            <h3>@item.Name</h3>
+        </div>
+        <img src="@pathImage" asp-append-version="true" />
+        <div class="card-body">
+            <p>@item.Emial</p>
+        </div>
+        <div class="card-footer text-center">
+
+            <a asp-controller="Home" asp-action="Detail" asp-route-id="@item.ID">Detail</a>
+
+
+            <a href="@Url.Action("Detail","Home", new { id=item.ID})" class="btn btn-primary m-1">View</a>
+            <a asp-action="Edit" asp-controller="Home" asp-route-id="@item.ID" class="btn btn-primary m-1">Edit</a>
+            <a href="#" class="btn btn-primary m-1">Delete</a>
+        </div>
+    </div>
+    }
+
+</div>
+
+@section  scripts{
+
+
+}

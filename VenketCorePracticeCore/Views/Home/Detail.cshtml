@@ -1,0 +1,31 @@
+﻿@model Employee
+
+@{
+        //Layout = "~/Views/Shared/_Layout.cshtml";
+        ViewBag.Title = "Detail-Employee";
+
+        string pathImage = "~/Images/" + (Model.imagePath?? "https://static.euronews.com/articles/stories/03/22/31/26/880x495_cmsv2_19a68302-c560-548f-a4c9-fdd67499665c-3223126.jpg");
+
+}
+
+<div class="card-deck">
+  
+    <div class="card m-3">
+        <div class="card-header">
+            @*<h3>@Model.Name</h3>*@
+        </div>
+        <img  src="@pathImage" asp-append-version="true"/>
+        <div class="card-body">
+            <p>@Model.Emial</p>
+            <span>Department</span> @Model.Departments
+        </div>
+  
+        <div class="card-footer text-center">
+            <a asp-controller="Home" asp-action="ShowAllEmployee" class="btn btn-primary">Back</a>
+            <a asp-action="Edit" asp-controller="Home" asp-route-id="@Model.ID" class="btn btn-primary">Edit</a>
+            <a href="#" class="btn btn-primary">Delete</a>
+        </div>
+    </div>
+    
+
+</div>

@@ -1,0 +1,77 @@
+﻿@model IEnumerable<IdentityRole>
+
+@{
+    ViewBag.Title = "All-Rols";
+}
+<h2>All Roles</h2>
+<div class="container">
+    <div class="row">
+
+        @if (Model.Any())
+        {
+            foreach (var role in Model)
+            {
+
+                <div class="card col-6" style=" margin-top:12px">
+                    <div class="card-body">
+                        <h5 class="card-title text-success">Role Id: @role.Id</h5>
+                        <p class="card-text">Name : @role.</p>
+                        <a asp-controller="AdminRole" asp-action="EditRole" asp-route-id="@role.Id" class="card-link btn btn-dark">Edit</a>
+                        @*<a asp-controller="AdminRole" asp-action="DeleteRole" asp-route-id="@role.Id" class="card-link btn btn-danger">Delete</a>*@
+
+                        <form method="post" asp-action="DeleteRole" asp-controller="Administration" asp-route-id="@role.Id">
+
+                            <span style="display:none" id="confirmDeletespan_@role.Id">
+
+                                Are you Sure you want to delete ?
+                                <button class="btn btn-danger" type="submit">Yes</button>
+                                <a href="#" class="btn btn-primary" onclick="DeleteConfirm('@role.Id', false);">No</a>
+                            </span>
+                        </form>
+
+                        <span id="deletespan_@role.Id">
+                            <a href="#" class="btn btn-danger" onclick="DeleteConfirm('@role.Id', true);">Delete</a>
+                        </span>
+                    </div>
+                </div>
+            }
+
+        }
+        else
+        {
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title text-danger">No Roles</h5>
+                    <p class="card-text">User the button below to create New Role.</p>
+                    <a asp-controller="AdminRole" asp-action="CreateRole" class="card-link">Create</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+
+
+@section scripts{
+    @*<script src="~/lib/jqueryfiles/jquery.js"></script>*@
+    <script src="~/scripts/CustomScript.js"></script>
+
+    @*<script type="text/javascript">
+            function DeleteConfirm(uniqueID, isDeleted) {
+                var deletespan = 'deletespan_' + uniqueID;
+
+                var confirmDeleteSpan = 'confirmDeletespan_' + uniqueID;
+
+                if (isDeleted) {
+                    $("#" + deletespan).hide();
+                    $("#" + confirmDeleteSpan).show();
+                }
+                else {
+                    $("#" + deletespan).show();
+                    $("#" + confirmDeleteSpan).hide();
+                }
+            }
+        </script>*@
+
+}

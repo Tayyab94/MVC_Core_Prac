@@ -1,0 +1,30 @@
+﻿
+@model IEnumerable<Employee>
+
+@{
+    ViewBag.Title = "Emp-Cont-List";
+}
+
+
+<h3>New Employee Controller </h3>
+
+<table>
+    <tr>
+        <td>Id</td>
+        <td>Name</td>
+        <td>Email</td>
+    </tr>
+
+
+    @foreach (var item in Model)
+    {
+        <tr>
+
+            <td>@item.ID</td>
+            <td>@item.Name</td>
+            <td>@item.Emial</td>
+
+        </tr>
+    }
+
+</table>

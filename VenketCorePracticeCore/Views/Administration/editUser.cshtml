@@ -1,0 +1,68 @@
+﻿@model EditUserViewModel
+
+@{ 
+    ViewBag.Title = "Edit-Users";
+}
+
+<h3>Edit USer sEction</h3>
+
+<form method="post" class="mt-3">
+    <div class="row form-group">
+        <label asp-for="Id" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-10">
+            <input asp-for="Id" class="form-control" disabled />
+        </div>
+    </div>
+    <div class="row form-group">
+        <label asp-for="Email" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-10">
+            <input asp-for="Email" class="form-control" />
+        </div>
+    </div>
+    <div class="row form-group">
+        <label asp-for="userName" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-10">
+            <input asp-for="userName" class="form-control" />
+        </div>
+    </div>
+
+    <div class="row form-group">
+        <label asp-for="City" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-10">
+            <input asp-for="City" class="form-control" disabled />
+        </div>
+    </div>
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="row form-group">
+        <div class="col-sm-10">
+            <button type="submit" class="btn btn-primary">Update</button>
+
+            <a class="btn btn-danger" asp-action="showAllUsers" asp-controller="Administration">Cancel</a>
+        </div>
+    </div>
+
+
+</form>
+
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">USer Roles</h2>
+    </div>
+    <div class="card-body">
+        @if(Model.Roles.Any())
+        {
+            foreach (var item in Model.Roles)
+            {
+                <h6 class="card-title">@item</h6>
+            }
+        }
+        else
+        {
+            <h5 class="card-title">None At the Moment!</h5>
+        }
+
+        <a asp-action="ManageUserRoles" asp-route-userID="@Model.Id" class="btn btn-info">Manage Roles</a>
+    </div>
+</div>
