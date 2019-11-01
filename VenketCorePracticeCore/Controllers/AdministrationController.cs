@@ -141,6 +141,7 @@ namespace VenketCorePracticeCore.Controllers
         }
 
 
+        //this Function is Use to Manage the User Role. (Assign the Role to the User).
         [HttpPost]
         public async Task<IActionResult> ManageUserRoles(List<RolesUserViewModel> model, string userId)
         {
