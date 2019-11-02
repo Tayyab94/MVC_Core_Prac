@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using VenketCorePracticeCore.Models;
 using VenketCorePracticeCore.Models.DataContext;
+using VenketCorePracticeCore.Models.StaticClasses;
 using VenketCorePracticeCore.Models.ViewModels;
 
 namespace VenketCorePracticeCore.Controllers
@@ -42,7 +44,7 @@ namespace VenketCorePracticeCore.Controllers
         public async Task<IActionResult> editUser(string ID)
         {
             var user = await userManager.FindByIdAsync(ID);
-            if(user==null)
+            if (user == null)
             {
                 ViewBag.ErrorMessage = $"USer With Id {ID} can not be found";
 
@@ -59,7 +61,7 @@ namespace VenketCorePracticeCore.Controllers
                 Email = user.Email,
                 Claims = userClaims.Select(s => s.Value).ToList(),
                 Roles = userRoles,
-                City=user.FirstNameofUser
+                City = user.FirstNameofUser
             };
 
             return View(model);
@@ -81,11 +83,11 @@ namespace VenketCorePracticeCore.Controllers
             {
                 user.Email = userModel.Email;
                 user.UserName = userModel.userName;
-                user.FirstNameofUser = userModel.City;        
+                user.FirstNameofUser = userModel.City;
 
                 var result = await userManager.UpdateAsync(user);
 
-                if(result.Succeeded)
+                if (result.Succeeded)
                 {
                     return RedirectToAction("ShowAllUsers", "Administration");
                 }
@@ -107,7 +109,7 @@ namespace VenketCorePracticeCore.Controllers
             ViewBag.UserID = userID;
             var user = await userManager.FindByIdAsync(userID);
 
-            if(user==null)
+            if (user == null)
             {
                 ViewBag.ErrorMessage = $"User Id {user.Id} is not here";
 
@@ -125,7 +127,7 @@ namespace VenketCorePracticeCore.Controllers
                     RoleName = role.Name
                 };
 
-                if(await userManager.IsInRoleAsync(user,role.Name))
+                if (await userManager.IsInRoleAsync(user, role.Name))
                 {
                     userRolesviewmodel.IsSelected = true;
                 }
@@ -158,7 +160,7 @@ namespace VenketCorePracticeCore.Controllers
 
             var result = await userManager.RemoveFromRolesAsync(user, roles);
 
-            if(result.Succeeded==false)
+            if (result.Succeeded == false)
             {
                 ViewBag.ErrorMessage = $"Can Not existing User Roles";
                 return View("NotFound");
@@ -178,6 +180,91 @@ namespace VenketCorePracticeCore.Controllers
             return RedirectToAction("EditUser", new { ID = userId });
 
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ManageUserClaim(string userId)
+        {
+            var user = await userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = $"User Id {user.Id} is not here";
+
+                return View("NotFound");
+            }
+
+            var existingUserClaims = await userManager.GetClaimsAsync(user);
+
+            var model = new UserClaimViewModel
+            {
+                UserId = userId
+            };
+
+            foreach (Claim claim in ClaimsStore.AllClaims)
+            {
+                UserClaims userClaims = new UserClaims
+                {
+                    ClaimTyope = claim.Type
+                };
+
+                //If the user has Claims, Set IsSelected Property is True, so the checkbox
+                // next to the claim is checked on ui .
+
+                if (existingUserClaims.Any(c => c.Type == claim.Type))
+                {
+                    userClaims.IsSelected = true;
+                }
+                else
+                {
+                    userClaims.IsSelected = false;
+                }
+                model.Claims.Add(userClaims);
+
+
+            }
+
+            return View(model);
+        }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> ManageUserClaim(UserClaimViewModel userClaimViewModel)
+        {
+            var user = await userManager.FindByIdAsync(userClaimViewModel.UserId);
+
+            if (user == null)
+            {
+                ViewBag.ErrorMessage = $"User Id {user.Id} is not here";
+
+                return View("NotFound");
+            }
+
+            var existingUserClaims = await userManager.GetClaimsAsync(user);
+            var result = await userManager.RemoveClaimsAsync(user, existingUserClaims);
+
+            if(result.Succeeded==false)
+            {
+                ViewBag.ErrorMessage = $"We can not Delete the existing User Claims";
+
+                return View("NotFound");
+            }
+
+            result = await userManager.AddClaimsAsync(user, userClaimViewModel.Claims.Where(s => s.IsSelected).Select(x => new Claim(x.ClaimTyope, x.ClaimTyope)));
+
+            if (result.Succeeded == false)
+            {
+                ViewBag.ErrorMessage = $"Cannot add selected Claims to the USER!";
+
+                return View("NotFound");
+            }
+
+
+            return RedirectToAction("EditUser", new { ID = userClaimViewModel.UserId });
+        }
+
+
         public async Task<IActionResult> DeleteUsers(string id)
         {
             var user = await userManager.FindByIdAsync(id);
@@ -192,7 +279,7 @@ namespace VenketCorePracticeCore.Controllers
             var result = await userManager.DeleteAsync(user);
 
             if (result.Succeeded)
-                return RedirectToAction("ShowAllRoles","AdminRole");
+                return RedirectToAction("ShowAllRoles", "AdminRole");
 
             foreach (var error in result.Errors)
             {

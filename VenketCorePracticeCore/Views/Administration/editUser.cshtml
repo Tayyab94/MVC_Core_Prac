@@ -66,3 +66,25 @@
         <a asp-action="ManageUserRoles" asp-route-userID="@Model.Id" class="btn btn-info">Manage Roles</a>
     </div>
 </div>
+
+<div class="card">
+    <div class="card-header">
+        <h2 class="card-title">User Claim</h2>
+    </div>
+    <div class="card-body">
+        @if(Model.Claims.Any())
+        {
+            foreach (var claim in Model.Claims)
+            {
+                <h5 class="text-capitalize card-title">@claim</h5>
+            }
+        }
+        else
+        {
+            <h2>None at the Moment!</h2>
+        }
+    </div>
+    <div class="card-footer">
+        <a asp-action="ManageUserClaim" asp-route-userId="@Model.Id" class="btn btn-outline-primary"    >Manage Claims</a>
+    </div>
+</div>
